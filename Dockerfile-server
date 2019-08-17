@@ -21,7 +21,7 @@ FROM pdns-builder AS server-builder
 ARG server_name=pdns
 ARG server_ver=4.1.13
 
-RUN echo "Building ${server_name} version ${server_ver}" &&
+RUN echo "Building ${server_name} version ${server_ver}" && \
     curl -RL -O "https://downloads.powerdns.com/releases/${server_name}-${server_ver}.tar.bz2" && \
     tar xvfj "${server_name}-${server_ver}.tar.bz2" && \
     rm -f "${server_name}-${server_ver}.tar.bz2"

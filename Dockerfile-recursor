@@ -21,7 +21,7 @@ FROM pdns-builder AS recursor-builder
 ARG recursor_name=pdns-recursor
 ARG recursor_ver=4.2.0
 
-RUN echo "Building ${recursor_name} version ${recursor_ver}" &&
+RUN echo "Building ${recursor_name} version ${recursor_ver}" && \
     curl -RL -O "https://downloads.powerdns.com/releases/${recursor_name}-${recursor_ver}.tar.bz2" && \
     tar xvfj "${recursor_name}-${recursor_ver}.tar.bz2" && \
     rm -f "${recursor_name}-${recursor_ver}.tar.bz2"
