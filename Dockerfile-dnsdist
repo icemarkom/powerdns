@@ -7,7 +7,7 @@ FROM alpine AS pdns-builder
 RUN apk --update upgrade && \
     apk add ca-certificates curl && \
     apk add --virtual .build-depends \
-            g++ make boost-dev libsodium-dev lua-dev \
+            file g++ make boost-dev libsodium-dev lua-dev \
             net-snmp-dev protobuf-dev libedit-dev re2-dev
 
 
@@ -51,7 +51,7 @@ FROM alpine AS dnsdist
 
 RUN apk --update upgrade && \
     apk add ca-certificates curl less man openssl \
-            libsodium lua net-snmp protobuf && \
+            libedit re2 libsodium lua net-snmp protobuf && \
     rm -rf /var/cache/apk/*
 
 RUN addgroup -S pdns && \
@@ -60,6 +60,6 @@ RUN addgroup -S pdns && \
 COPY --from=dnsdist-builder /usr/local/bin/ /usr/local/bin/
 COPY --from=dnsdist-builder /usr/share/man/man1/ /usr/share/man/man1/
 
-ENTRYPOINT ["/usr/local/bin/disdist"]
+ENTRYPOINT ["/usr/local/bin/dnsdist"]
 CMD ["--help"]
 
