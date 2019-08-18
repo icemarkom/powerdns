@@ -50,8 +50,8 @@ RUN apk --update upgrade && \
             libsodium lua net-snmp protobuf && \
     rm -rf /var/cache/apk/*
 
-RUN addgroup -S pdns && \
-    adduser -S -D -G pdns pdns
+RUN addgroup -g 2500 -S pdns && \
+    adduser -u 2500 -S -D -G pdns pdns
 
 COPY --from=recursor-builder /usr/local/bin/ /usr/local/bin/
 COPY --from=recursor-builder /usr/local/sbin/ /usr/local/sbin/

@@ -56,8 +56,8 @@ RUN apk --update upgrade && \
             sqlite-libs geoip yaml-cpp && \
     rm -rf /var/cache/apk/*
 
-RUN addgroup -S pdns && \
-    adduser -S -D -G pdns pdns
+RUN addgroup -g 2500 -S pdns && \
+    adduser -u 2500 -S -D -G pdns pdns
 
 COPY --from=server-builder /usr/local/bin/ /usr/local/bin/
 COPY --from=server-builder /usr/local/sbin/ /usr/local/sbin/
