@@ -19,7 +19,7 @@ RUN apk --update upgrade && \
 FROM pdns-builder AS server-builder
 
 ARG server_name=pdns
-ARG server_ver=4.1.13
+ARG server_ver=4.2.0
 
 RUN echo "Building ${server_name} version ${server_ver}" && \
     curl -RL -O "https://downloads.powerdns.com/releases/${server_name}-${server_ver}.tar.bz2" && \
