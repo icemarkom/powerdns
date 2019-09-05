@@ -7,9 +7,9 @@ FROM alpine AS pdns-builder
 RUN apk --update upgrade && \
     apk add ca-certificates curl && \
     apk add --virtual .build-depends \
-            file g++ make boost-dev openssl-dev libsodium-dev lua-dev \
-            net-snmp-dev protobuf-dev mariadb-dev postgresql-dev sqlite-dev \
-            geoip-dev yaml-cpp-dev
+            file g++ make boost-dev openssl-dev curl-dev libsodium-dev \
+            lua-dev net-snmp-dev protobuf-dev mariadb-dev postgresql-dev \
+            sqlite-dev geoip-dev yaml-cpp-dev
 
 
 ###############################################################################
