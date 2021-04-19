@@ -15,7 +15,6 @@ case $1 in
   recursor)
     build_type="recursor"
   ;;
-
   dnsdist)
     build_type="dnsdist"
   ;;
@@ -28,7 +27,6 @@ esac
 if [[ ! -z $2 ]]; then
   build_arg="--build-arg=${build_type}_ver=$2"
 fi
-
 
 docker build \
   -t ${docker_user}/${image_prefix}-${build_type} \
