@@ -28,9 +28,19 @@ if [[ ! -z $2 ]]; then
   build_arg="--build-arg=${build_type}_ver=$2"
 fi
 
+if [[ ! -d ${build_type} ]]; then
+  echo "Cannot find ${build_type}" > /dev/stderr
+  exit 42
+fi
+
+
+if [[ ! -f ${build_type}/Dockerfile ]]; then
+  echo "Cannot find ${build_type}/Dockerfile" > /dev/stderr
+  exit 42
+fi
+
 docker build \
   -t ${docker_user}/${image_prefix}-${build_type} \
   ${build_arg} \
-  -f Dockerfile-${build_type} \
+  -f ${build_type}/Dockerfile \
   .
-
