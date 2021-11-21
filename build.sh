@@ -1,46 +1,47 @@
 #!/bin/bash
 
+# For "weird" multiplatform failures:
+#
+# docker run --pull always --rm --privileged multiarch/qemu-user-static --reset -p yes
+
 docker_user="icemarkom"
 image_prefix="pdns"
+build_targets=("dnsdist" "server" "recursor")
+platform_list="linux/amd64,linux/arm64,linux/arm"
 
-if [[ -z $1 ]]; then
-  echo "Build name must be specified." > /dev/stderr
-  exit 42
+# Default target versions
+dnsdist="1.6.1"
+server="4.5.2"
+recursor="4.5.7"
+
+
+# TODO(markom@gmail.com): These could potentially be moved into the build loop...
+# dnsdist version override
+if [[ ! -z "${DNSDIST_VERSION}" ]]; then
+  dnsdist="${DNSDIST_VERSION}"
 fi
 
-case $1 in
-  server)
-    build_type="server"
-  ;;
-  recursor)
-    build_type="recursor"
-  ;;
-  dnsdist)
-    build_type="dnsdist"
-  ;;
-  *)
-    echo "Unknown build type: $1" > /dev/stderr
-    exit 42
-  ;;
-esac
-
-if [[ ! -z $2 ]]; then
-  build_arg="--build-arg=${build_type}_ver=$2"
+# server version override
+if [[ ! -z "${PDNS_SERVER_VERSION}" ]]; then
+  server="${PDNS_SERVER_VERSION}"
 fi
 
-if [[ ! -d ${build_type} ]]; then
-  echo "Cannot find ${build_type}" > /dev/stderr
-  exit 42
+# recursor version override
+if [[ ! -z "${PDNS_RECURSOR_VERSION}" ]]; then
+  recursor="${PDNS_RECURSOR_VERSION}"
 fi
 
-
-if [[ ! -f ${build_type}/Dockerfile ]]; then
-  echo "Cannot find ${build_type}/Dockerfile" > /dev/stderr
-  exit 42
+if [[ ! -z $1 ]]; then
+  build_targets=($*)
 fi
 
-docker build \
-  -t ${docker_user}/${image_prefix}-${build_type} \
-  ${build_arg} \
-  -f ${build_type}/Dockerfile \
-  .
+for build_target in ${build_targets[@]}; do
+  target_version="${!build_target}"
+  docker buildx build \
+    --target="${build_target}" \
+    --build-arg "${build_target}_version"="${target_version}" \
+    -t "${docker_user}/${image_prefix}-${build_target}" \
+    --platform="${platform_list}" \
+    --push \
+    ${PWD}
+done
