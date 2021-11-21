@@ -14,6 +14,9 @@ dnsdist="1.6.1"
 server="4.5.2"
 recursor="4.5.7"
 
+if [[ ! -z "${PLATFORM_LIST}" ]]; then
+  platform_list="${PLATFORM_LIST}"
+fi
 
 # TODO(markom@gmail.com): These could potentially be moved into the build loop...
 # dnsdist version override
